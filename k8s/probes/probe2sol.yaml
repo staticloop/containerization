@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: httpd-custom-deployment
+  labels:
+    app: httpd-custom
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: httpd-custom
+  template:
+    metadata:
+      labels:
+        app: httpd-custom
+    spec:
+      containers:
+      - name: httpd-custom-container
+        image: adityadev01/httpd-custom:1.0
+        readinessProbe:
+          httpGet:
+            path: /datetime.html
+            port: 80
+          initialDelaySeconds: 4
+          periodSeconds: 3
+          failureThreshold: 1
+        livenessProbe:
+          httpGet:
+            path: /datetime.html
+            port: 80
+          initialDelaySeconds: 4
+          periodSeconds: 4
+          failureThreshold: 1
+      initContainers:
+      - name: random-wait
+        image: busybox:1.28
+        command: ['sh', '-c', 'echo random sleep..; sleep $((RANDOM % 30)); echo done;']
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: httpd-custom-service
+spec:
+  selector:
+    app: httpd-custom
+  ports:
+  - protocol: TCP
+    port: 80
+    nodePort: 30080
+  type: NodePort

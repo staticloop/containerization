@@ -1,0 +1,13 @@
+<html>
+<h2 id="digital-clock"></h2>
+<script>
+    var currentdate = new Date(); 
+    var datetime = "Date & Time: " + currentdate.getDate() + "/"
+                    + (currentdate.getMonth()+1)  + "/" 
+                    + currentdate.getFullYear() + " @ "  
+                    + currentdate.getHours() + ":"  
+                    + currentdate.getMinutes() + ":" 
+                    + currentdate.getSeconds();
+    document.getElementById("digital-clock").innerHTML = datetime;                
+    </script>    
+</html>                

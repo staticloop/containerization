@@ -1,0 +1,61 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: seed-config
+data:
+  business.json: |
+    [
+      {"id":"b1","name":"Ducky's Car Wash"},
+      {"id":"b2","name": "Ninja Mike's"},
+      {"id":"b3","name": "Hanabi"},
+      {"id":"b4","name": "Market on Front"}
+    ]
+  review.json: |
+    [
+      {"id":"r1", business: "b1", "text": "review one"},
+      {"id":"r2", business: "b1", "text": "review two"},
+      {"id":"r3", business: "b2", "text": "review three"},
+      {"id":"r4", business: "b3", "text": "review four"}
+    ]
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-server-deployment
+  labels:
+    app: api-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api-server
+  template:
+    metadata:
+      labels:
+        app: api-server
+    spec:
+      volumes:
+      - name: seed-data-volume
+        configMap:
+          name: seed-config   
+      containers:
+      - name: api-server-container
+        image: adityadev01/api-server:1.0
+        volumeMounts:
+          - name: seed-data-volume
+            mountPath: /data/seed
+        ports:
+        - containerPort: 4001
+---        
+kind: Service
+apiVersion: v1
+metadata:
+  name: app-server-service
+spec:
+  selector:
+    app: api-server
+  ports:
+  - protocol: TCP
+    port: 4001  
+    nodePort: 30082
+  type: NodePort
