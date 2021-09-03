@@ -1,0 +1,28 @@
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: web-pod
+  namespace: k8s-lab
+  # pod requests > cpu=600m memory=576Mi 
+  # pod limit > cpu=1100m memory=1056Mi      
+spec:
+  containers:
+  - name: httpd-container
+    image: httpd:2.4.48
+    resources:
+      requests:
+        cpu: "200m"
+        memory: "64Mi"
+      limits:
+        cpu: "500m"
+        memory: "256Mi"
+  - name: db-container
+    image: neo4j
+    resources:
+      requests:
+        cpu: "400m"
+        memory: "512Mi"
+      limits:
+        cpu: "600m"
+        memory: "800Mi"

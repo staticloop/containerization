@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: sidecar
+spec:
+  containers:
+    - name: log-creator
+      image: busybox
+      command: ["sh","-c","while true; do echo $(date) - Some Event >> /var/app-log/event.log; sleep 12; done"]
+      volumeMounts:
+        - name: shared-volume
+          mountPath: /var/app-log
+    - name: log-shipper
+      image: busybox
+      command: ["sh","-c","while true; do cat /var/log/event.log; sleep 8; done"]
+      volumeMounts:
+        - name: shared-volume
+          mountPath: /var/log
+  volumes:
+    - name: shared-volume
+      emptyDir: {} # creates empty directory on node, used as scratch space

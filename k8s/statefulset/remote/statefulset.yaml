@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+ name: mongo
+spec:
+ serviceName: "mongo"
+ replicas: 1
+ selector:
+   matchLabels:
+     app: mongodb
+     tier: backend
+ template:
+   metadata:
+     labels:
+       app: mongodb
+       tier: backend
+   spec:
+     terminationGracePeriodSeconds: 10
+     nodeSelector:
+        nodeType: persistent 
+     containers:
+       - name: mongo
+         image: mongo:4.0
+         command:
+           - mongod
+           - "--replSet"
+           - rs0
+           - "--smallfiles"
+           - "--noprealloc"
+           - "--bind_ip"
+           - "0.0.0.0"
+         ports:
+           - containerPort: 27017
+         volumeMounts:
+           - name: jug-prod-disk
+             mountPath: /data/db
+       - name: mongo-sidecar
+         image: cvallance/mongo-k8s-sidecar
+         env:
+           - name: MONGO_SIDECAR_POD_LABELS
+             value: "app=mongodb,tier=backend"      
+ volumeClaimTemplates:
+ - metadata:
+     name: jug-prod-disk
+     annotations:
+       volume.beta.kubernetes.io/storage-class: "jug-prod-sc"
+   spec:
+     accessModes: [ "ReadWriteOnce" ]
+     resources:
+       requests:
+         storage: 3Gi

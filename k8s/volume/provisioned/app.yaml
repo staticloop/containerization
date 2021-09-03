@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: task-pv-pod
+  labels:
+    app: nginx-app
+spec:
+  volumes:
+    - name: task-pv-storage
+      persistentVolumeClaim:
+        claimName: task-pv-claim
+  containers:
+    - name: task-pv-container
+      image: nginx
+      ports:
+        - containerPort: 80
+          name: "http-server"
+      volumeMounts:
+        - mountPath: "/usr/share/nginx/html"
+          name: task-pv-storage
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: nginx-app-service
+spec:
+  selector:
+    app: nginx-app
+  ports:
+  - protocol: TCP
+    port: 80
+    nodePort: 30081
+  type: NodePort

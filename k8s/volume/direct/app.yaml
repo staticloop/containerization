@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: direct-pod
+  labels:
+    app: nginx-direct
+spec:
+  volumes:
+    - name: data
+      hostPath:
+        path: /tmp/mongo
+  containers:
+    - name: direct-nginx
+      image: nginx
+      ports:
+        - containerPort: 80
+          name: "http-server"
+      volumeMounts:
+        - name: data
+          mountPath: /usr/share/nginx/html
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: nginx-direct-service
+spec:
+  selector:
+    app: nginx-direct
+  ports:
+  - protocol: TCP
+    port: 80
+    nodePort: 30081
+  type: NodePort

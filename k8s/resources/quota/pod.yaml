@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: big-pod
+  namespace: k8s-lab
+spec:
+  containers:
+  - name: httpd-container
+    image: httpd:2.4.48
+    resources:
+      requests:
+        cpu: "500m"
+        memory: "256Mi"
+      limits:
+        cpu: "1001m"
+        memory: "1024Mi"
+    

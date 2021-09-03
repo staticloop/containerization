@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: monitor
+spec:
+  selector:
+    matchLabels:
+      app: monitor-nginx
+  template:
+    metadata:
+      labels:
+        app: monitor-nginx
+    spec:
+      containers:
+        - name: node-monitor-nginx-container
+          image: nginx:alpine
+          ports:
+          - containerPort: 80
+            hostPort: 8080
+            protocol: TCP
