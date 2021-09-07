@@ -5,7 +5,7 @@ metadata:
   labels:
     type: local
 spec:
-  # A PV of a particular class can only be bound to PVCs requesting that class.
+  # A PV of a particular class can only be bound to PVCs requesting that class
   storageClassName: manual
   capacity:
     storage: 2Gi

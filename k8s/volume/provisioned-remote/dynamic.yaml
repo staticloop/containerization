@@ -8,6 +8,7 @@ parameters:
 reclaimPolicy: Retain
 allowVolumeExpansion: true
 ---
+# Notice the absence of PersistentVolume
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
