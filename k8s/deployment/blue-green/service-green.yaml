@@ -1,0 +1,13 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: web-app-service-green
+spec:
+  selector:
+    app: web-app
+    version: v2
+  ports:
+  - protocol: TCP
+    port: 80
+    nodePort: 30090
+  type: NodePort

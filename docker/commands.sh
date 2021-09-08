@@ -31,7 +31,21 @@ docker logs brave_allen # view logs of a running container with name brave_allen
 docker logs -f brave_allen # view and tail the logs of a running container with name brave_allen
 docker build . # user dockerfile in current directory to build an image
 docker build . –t myimage:v1 # user dockerfile in current directory to build an image and tag it with myimage:v1
-
+docker history <image name> # Show history of changes for an image
+docker image prune # clean up unused images i.e. with no containers with a single command. 
+docker container prune # cleanup stopped containers with single command to free up space.
+docker diff <container id> # filesystem changes between container and image. 
+docker stats # docker processes and resource usage updated live 
+docker top <container id/name> # display running processes for a container
+docker diff <container id/name> # kill a docker container if graceful shutdown is not possible 
+docker rename <old name> <new name> # rename an existing container
+docker update --restart always nginx # update the configuration of a running container
+docker save <image name:tag> > file.tar # save image to a tar file with all the layers, tags and history
+docker load < file.tar # loads the saved image back into your list of images
+docker export [nginx container id] > nginx.tar # dumps of a running or stopped container filesystem to a tar archive without any metadata, history or layers
+docker import nginx.tgz # imports exported file system as docker image. 
+docker cp <container id>:<path> <host path> # copy from container to host
+docker cp <host path> <container id>:<path> # copy from host to container
 
 
 

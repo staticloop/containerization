@@ -18,4 +18,4 @@ spec:
     spec:
       containers:
       - name: web-react-container
-        image: adityadev01/web-react:1.0
+        image: adityadev01/web-react:2.0

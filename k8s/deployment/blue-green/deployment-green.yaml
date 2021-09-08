@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-app-v2
+  labels:
+    app: web-app
+    version: v2
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: web-app
+      version: v2
+  template:
+    metadata:
+      labels:
+        app: web-app
+        version: v2
+    spec:
+      containers:
+      - name: web-react
+        image: adityadev01/web-react:2.0
