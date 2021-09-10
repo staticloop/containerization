@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: gateway-pod
+  labels:
+    app: gateway-app
+spec:
+  containers:
+  - name: gateway-container
+    image: adityadev01/hr-gateway:1.0
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: hr-gateway
+spec:
+  selector:
+    app: gateway-app
+  ports:
+  - protocol: TCP
+    port: 8080  
+    nodePort: 30081 
+  type: NodePort

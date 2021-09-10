@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: payroll-pod
+  labels:
+    app: payroll-app
+spec:
+  containers:
+  - name: payroll-container
+    image: adityadev01/hr-payroll:1.0
+    env:
+      - name: AUTH_KEY
+        value: "456"
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: hr-payroll
+spec:
+  selector:
+    app: payroll-app
+  ports:
+  - protocol: TCP
+    port: 9090
