@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Values.statefulset.neo4j.name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Values.neo4j.label }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.neo4j.label }}
+  serviceName: {{ .Values.services.neo4j.name }}
+  replicas: {{ .Values.statefulset.neo4j.replicas }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.neo4j.label }}
+    spec:
+      volumes:
+        - name: data-volume
+          hostPath:
+            path: {{ .Values.statefulset.neo4j.hostPath }} 
+      containers:
+      - name: neo4j-pod
+        image: {{ .Values.statefulset.neo4j.image }}
+        volumeMounts:
+        - name: data-volume
+          mountPath: {{ .Values.statefulset.neo4j.mountPath }} 

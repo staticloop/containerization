@@ -1,0 +1,141 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.deployments.gateway.name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Values.gateway.label }}
+spec:
+  replicas: {{ .Values.deployments.gateway.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.gateway.label }}
+  template:
+    metadata:
+      name: {{ .Values.deployments.gateway.name }}-pod
+      labels:
+        app: {{ .Values.gateway.label }}
+    spec:
+      containers:
+      - name: {{ .Values.deployments.gateway.name }}-container
+        image: {{ .Values.deployments.gateway.image }} 
+        ports:
+          - name: gateway-port
+            containerPort: {{ .Values.gateway.containerPort }}
+        startupProbe:
+          httpGet:
+            path: {{ .Values.deployments.gateway.startupProbe.path }}
+            port: gateway-port
+          periodSeconds: {{ .Values.deployments.gateway.startupProbe.periodSeconds }}
+          failureThreshold: {{ .Values.deployments.gateway.startupProbe.failureThreshold }}
+        readinessProbe:
+          httpGet:
+            path: {{ .Values.deployments.gateway.readinessProbe.path }}
+            port: gateway-port
+        livenessProbe:
+          httpGet:
+            path: {{ .Values.deployments.gateway.livenessProbe.path }} 
+            port: gateway-port
+          periodSeconds: {{ .Values.deployments.gateway.livenessProbe.periodSeconds }}
+          failureThreshold: {{ .Values.deployments.gateway.livenessProbe.failureThreshold }}
+          successThreshold: {{ .Values.deployments.gateway.livenessProbe.successThreshold }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.deployments.payroll.name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Values.payroll.label }}
+spec:
+  replicas: {{ .Values.deployments.payroll.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.payroll.label }}
+  template:
+    metadata:
+      name: {{ .Values.deployments.payroll.name }}-pod
+      labels:
+        app: {{ .Values.deployments.payroll.label }}
+    spec:
+      containers:
+      - name: {{ .Values.deployments.payroll.name }}-container
+        image: {{ .Values.deployments.payroll.image }} 
+        env:
+          - name: AUTH_KEY
+            value: {{ quote .Values.deployments.payroll.authKey }}
+        ports:
+          - name: payroll-port
+            containerPort: {{ .Values.payroll.containerPort }} 
+        startupProbe:
+          httpGet:
+            path: {{ .Values.deployments.payroll.startupProbe.path }} 
+            port: payroll-port
+          periodSeconds: {{ .Values.deployments.payroll.startupProbe.periodSeconds }}
+          failureThreshold: {{ .Values.deployments.payroll.startupProbe.failureThreshold }}
+        readinessProbe:
+          httpGet:
+            path: {{ .Values.deployments.payroll.readinessProbe.path }}
+            port: payroll-port
+        livenessProbe:
+          httpGet:
+            path: {{ .Values.deployments.payroll.livenessProbe.path }} 
+            port: payroll-port
+          periodSeconds: {{ .Values.deployments.payroll.livenessProbe.periodSeconds }}
+          failureThreshold: {{ .Values.deployments.payroll.livenessProbe.failureThreshold }}
+          successThreshold: {{ .Values.deployments.payroll.livenessProbe.successThreshold }}  
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.deployments.timesheet.name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Values.timesheet.label }}
+spec:
+  replicas: {{ .Values.deployments.timesheet.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.timesheet.label }}
+  template:
+    metadata:
+      name: {{ .Values.deployments.timesheet.name }}-pod
+      labels:
+        app: {{ .Values.timesheet.label }}
+    spec:
+      volumes:
+        - name: init-data-volume
+          configMap:
+            name: init-config   
+      containers:
+      - name: {{ .Values.deployments.timesheet.name }}-container
+        image: {{ .Values.deployments.timesheet.image }} 
+        volumeMounts:
+          - name: init-data-volume
+            mountPath: {{ .Values.deployments.timesheet.dataPath }}
+        envFrom:
+          - secretRef:
+              name: neo4j-config
+        env:
+          - name: INIT_PATH
+            value: {{ .Values.deployments.timesheet.dataPath }}
+        ports:
+          - name: timesheet-port
+            containerPort: {{ .Values.timesheet.containerPort }}  
+        startupProbe:
+          httpGet:
+            path: {{ .Values.deployments.timesheet.startupProbe.path }} 
+            port: timesheet-port
+          periodSeconds: {{ .Values.deployments.timesheet.startupProbe.periodSeconds }}
+          failureThreshold: {{ .Values.deployments.timesheet.startupProbe.failureThreshold }}
+        readinessProbe:
+          httpGet:
+            path: {{ .Values.deployments.timesheet.readinessProbe.path }}
+            port: timesheet-port
+        livenessProbe:
+          httpGet:
+            path: {{ .Values.deployments.timesheet.livenessProbe.path }} 
+            port: timesheet-port
+          periodSeconds: {{ .Values.deployments.timesheet.livenessProbe.periodSeconds }}
+          failureThreshold: {{ .Values.deployments.timesheet.livenessProbe.failureThreshold }}
+          successThreshold: {{ .Values.deployments.timesheet.livenessProbe.successThreshold }}

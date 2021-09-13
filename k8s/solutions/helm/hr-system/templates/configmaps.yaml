@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: init-config
+  namespace: {{ .Values.namespace }}
+data:
+  schedule.json: |
+    [
+      {"id" : 1, "name": "Three days - PT", "hours": 12, "pattern": ["M", "W", "T"] },
+      {"id" : 2, "name": "Three days - FT", "hours": 18, "pattern": ["M", "T", "W"] },
+      {"id" : 3, "name": "Four days - PT", "hours": 20, "pattern": ["M", "W", "T", "F"]},
+      {"id" : 4, "name": "Five days - FT", "hours": 40, "pattern": ["M", "T", "W", "T", "F"]}  
+    ]

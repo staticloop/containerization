@@ -1,0 +1,95 @@
+namespace: default
+
+payroll: 
+  label: payroll-app
+  containerPort: 9090
+
+timesheet:
+  label: timesheet-app
+  containerPort: 8081
+
+gateway:
+  label: gateway-app
+  containerPort: 8080
+
+services:
+  gateway:
+    name: hr-gateway
+    nodePort: 30081
+  timesheet:
+    name: hr-timesheet
+  payroll:
+    name: hr-payroll
+  neo4j:
+    name: neo4j-db
+    httpNodePort: 30002
+    boltNodePort: 30001
+
+deployments:
+  gateway:
+    name: gateway-app
+    replicas: 3
+    image: adityadev01/hr-gateway:2.0
+    startupProbe:
+      path: /api/ready
+      periodSeconds: 60
+      failureThreshold: 2
+    readinessProbe:
+      path: /api/ready
+    livenessProbe:
+      path: /api/health
+      periodSeconds: 8
+      failureThreshold: 1
+      successThreshold: 1
+  payroll:
+    name: payroll-app
+    label: payroll-app
+    replicas: 3
+    image: adityadev01/hr-payroll:2.0
+    containerPort: 9090
+    authKey: "456"
+    startupProbe:
+      path: /api/health
+      periodSeconds: 60
+      failureThreshold: 2
+    readinessProbe:
+      path: /api/health
+    livenessProbe:
+      path: /api/health
+      periodSeconds: 8
+      failureThreshold: 1
+      successThreshold: 1
+  timesheet:
+    name: timesheet-app
+    label: timesheet-app
+    replicas: 3
+    image: adityadev01/hr-timesheet:1.0
+    containerPort: 8081
+    authKey: 456
+    dataPath: /data/timesheet
+    startupProbe:
+      path: /api/config
+      periodSeconds: 60
+      failureThreshold: 2
+    readinessProbe:
+      path: /api/ready
+    livenessProbe:
+      path: /api/health
+      periodSeconds: 8
+      failureThreshold: 1
+      successThreshold: 1
+
+neo4j:
+  label: neo4j-db
+  containerPort: 8081
+  uri: bolt://neo4j-db:7687
+  user: bmVvNGo=
+  password: c2VjdXJlQDEyMw== 
+
+statefulset:
+  neo4j:
+    name: neo4j-sts
+    replicas: 1
+    hostPath: /tmp/neo4j
+    mountPath: /data
+    image: neo4j

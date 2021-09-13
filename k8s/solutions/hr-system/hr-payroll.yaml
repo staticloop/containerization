@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payroll-app
+  labels:
+    app: payroll-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: payroll-app
+  template:
+    metadata:
+      name: payroll-pod
+      labels:
+        app: payroll-app
+    spec:
+      containers:
+      - name: payroll-container
+        image: adityadev01/hr-payroll:2.0
+        env:
+          - name: AUTH_KEY
+            value: "456"
+        ports:
+          - name: payroll-port
+            containerPort: 9090
+        startupProbe:
+          httpGet:
+            path: /api/health
+            port: payroll-port
+          periodSeconds: 60
+          failureThreshold: 2
+        readinessProbe:
+          httpGet:
+            path: /api/health
+            port: payroll-port
+        livenessProbe:
+          httpGet:
+            path: /api/health
+            port: payroll-port
+          periodSeconds: 8
+          failureThreshold: 1
+          successThreshold: 1  
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: hr-payroll
+spec:
+  selector:
+    app: payroll-app
+  ports:
+  - protocol: TCP
+    port: 9090

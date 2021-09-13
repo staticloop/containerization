@@ -1,0 +1,89 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: init-config
+data:
+  schedule.json: |
+    [
+      {"id" : 1, "name": "Three days - PT", "hours": 12, "pattern": ["M", "W", "T"] },
+      {"id" : 2, "name": "Three days - FT", "hours": 18, "pattern": ["M", "T", "W"] },
+      {"id" : 3, "name": "Four days - PT", "hours": 20, "pattern": ["M", "W", "T", "F"]},
+      {"id" : 4, "name": "Five days - FT", "hours": 40, "pattern": ["M", "T", "W", "T", "F"]}  
+    ]
+---  
+apiVersion: v1
+kind: Secret
+metadata:
+  name: neo4j-config
+type: Opaque
+stringData:
+  NEO4J_URI: bolt://neo4j-db:7687
+data:
+  NEO4J_USER: bmVvNGo= # neo4j
+  NEO4J_PASSWORD: c2VjdXJlQDEyMw== # secure@123
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: timesheet-app
+  labels:
+    app: timesheet-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: timesheet-app
+  template:
+    metadata:
+      name: timesheet-pod
+      labels:
+        app: timesheet-app
+    spec:
+      volumes:
+        - name: init-data-volume
+          configMap:
+            name: init-config   
+      containers:
+      - name: timesheet-container
+        image: adityadev01/hr-timesheet:1.0
+        volumeMounts:
+          - name: init-data-volume
+            mountPath: /data/timesheet
+        envFrom:
+          - secretRef:
+              name: neo4j-config
+        env:
+          - name: INIT_PATH
+            value: /data/timesheet
+        ports:
+          - name: timesheet-port
+            containerPort: 8081
+        startupProbe:
+          httpGet:
+            path: /api/config
+            port: timesheet-port
+          periodSeconds: 60
+          failureThreshold: 2
+        readinessProbe:
+          httpGet:
+            path: /api/ready
+            port: timesheet-port
+        livenessProbe:
+          httpGet:
+            path: /api/health
+            port: timesheet-port
+          periodSeconds: 8
+          failureThreshold: 1
+          successThreshold: 1  
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: hr-timesheet
+spec:
+  selector:
+    app: timesheet-app
+  ports:
+  - protocol: TCP
+    port: 8081
+    
