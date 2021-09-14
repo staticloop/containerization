@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: nginx-secondary-sts
+  labels:
+    app: secondary-app
+spec:
+  selector:
+    matchLabels:
+      app: secondary-app
+  serviceName: nginx-secondary-app
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: secondary-app
+    spec:
+      volumes:
+        - name: nginx-volume
+          hostPath:
+            path: /tmp/secondary-app
+      containers:
+      - name: nginx-secondary-pod
+        image: nginx
+        volumeMounts:
+        - name: nginx-volume
+          mountPath: /usr/share/nginx/html
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: nginx-secondary-app
+spec:
+  selector:
+    app: secondary-app
+  ports:
+  - name: http
+    protocol: TCP
+    port: 80
+    nodePort: 30082
+  type: NodePort

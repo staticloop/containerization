@@ -43,14 +43,14 @@ metadata:
   namespace: {{ .Values.namespace }}
 spec:
   selector:
-    app: neo4j-db
+    app: {{ .Values.neo4j.label }} 
   ports:
   - name: http
     protocol: TCP
     port: 7474
-    nodePort: 30002  
+    nodePort: {{ .Values.services.neo4j.httpNodePort }}   
   - name: bolt
     protocol: TCP
     port: 7687
-    nodePort: 30001  
+    nodePort: {{ .Values.services.neo4j.boltNodePort }}    
   type: NodePort

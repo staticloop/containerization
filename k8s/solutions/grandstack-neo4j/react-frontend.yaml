@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: react-app-deployment
+  labels:
+    app: react-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: react-app
+  template:
+    metadata:
+      labels:
+        app: react-app
+    spec:
+      containers:
+      - name: react-app-container
+        image: adityadev01/web-react:3.0
+        env:
+          - name: REACT_APP_GRAPHQL_URI
+            value: http://localhost:30082       
+---        
+kind: Service
+apiVersion: v1
+metadata:
+  name: react-app-service
+spec:
+  selector:
+    app: react-app
+  ports:
+  - protocol: TCP
+    port: 80  
+    nodePort: 30080
+  type: NodePort

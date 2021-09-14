@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: nginx-primary-sts
+  labels:
+    app: primary-app
+spec:
+  selector:
+    matchLabels:
+      app: primary-app
+  serviceName: nginx-primary-app
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: primary-app
+    spec:
+      volumes:
+        - name: nginx-volume
+          hostPath:
+            path: /tmp/primary-app
+      containers:
+      - name: nginx-primary-pod
+        image: nginx
+        volumeMounts:
+        - name: nginx-volume
+          mountPath: /usr/share/nginx/html
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: nginx-primary-app
+spec:
+  selector:
+    app: primary-app
+  ports:
+  - name: http
+    protocol: TCP
+    port: 80
+    nodePort: 30081  
+  type: NodePort

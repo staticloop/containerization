@@ -22,7 +22,7 @@ spec:
         volumeMounts:
         - name: persistent-store
           mountPath: /usr/share/nginx/html
-  volumeClaimTemplates:
+  volumeClaimTemplates: # replaces the volumes key
     - metadata:
         name: persistent-store
       spec:
