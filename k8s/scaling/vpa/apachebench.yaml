@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: apachebench
+spec:
+  containers:
+  - name: apachebench
+    image: mocoso/apachebench
+    command: ['sh', '-c', 'ab -n 1000000 -c 6 http://nginx-service/']

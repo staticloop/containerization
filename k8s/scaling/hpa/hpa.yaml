@@ -1,0 +1,12 @@
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: nginx-hpa
+spec:
+  minReplicas: 1 # overrides but won't go below replica count
+  maxReplicas: 10 # overrides replica count
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment # can be ReplicaSet, StatefulSet also
+    name: nginx-deployment
+  targetCPUUtilizationPercentage: 14

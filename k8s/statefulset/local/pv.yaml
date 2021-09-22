@@ -10,7 +10,7 @@ spec:
     storage: 200Mi
   accessModes:
     - ReadWriteOnce
-  local:
+  hostPath:
     path: /tmp/v1
   nodeAffinity:
     required:
@@ -33,7 +33,7 @@ spec:
     storage: 200Mi
   accessModes:
     - ReadWriteOnce
-  local:
+  hostPath:
     path: /tmp/v2
   nodeAffinity:
     required:

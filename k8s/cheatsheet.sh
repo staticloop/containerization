@@ -46,3 +46,13 @@ KUBE_EDITOR="nano" kubectl edit deployment nginx-deployment # open nano to edit 
 kubectl rollout status deployment nginx-deployment # display rollout status of deployment 
 kubectl rollout history deployment nginx-deployment # display rollout history 
 kubectl rollout undo deployment nginx-deployment # execute a rollback on deployment
+
+### observing
+### ------------
+kubectl get pods -o wide # get pod information in wide format
+kubectl edit pod gateway-pod # edit Pod gateway-pod with default editor
+kubectl edit deployment my-deployment # edit Deployment my-deployment with default editor  
+KUBE_EDITOR="nano" kubectl edit deployment my-deployment # edit Deployment my-deployment with nano editor
+kubectl get service nginx-service -o json # get details of nginx-service in json format
+kubectl get deployment my-deployment -o yaml > my-deployment.yaml # save details of Deployment in yaml format 
+kubectl get pods -l app=nginx -o wide # list pods with labels app=nginx 

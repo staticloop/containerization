@@ -1,0 +1,11 @@
+services:
+  gateway:
+    name: hr-gateway
+    type: LoadBalancer
+deployments:
+  gateway:
+    replicas: 12
+  payroll:
+    replicas: 12
+  timesheet:
+    replicas: 12

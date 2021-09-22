@@ -15,6 +15,7 @@ gateway:
 services:
   gateway:
     name: hr-gateway
+    type: NodePort
     nodePort: 30081
   timesheet:
     name: hr-timesheet

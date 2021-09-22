@@ -9,8 +9,10 @@ spec:
   ports:
   - protocol: TCP
     port: {{ .Values.gateway.containerPort }}  
-    nodePort: {{ .Values.services.gateway.nodePort }} 
-  type: NodePort
+    {{if eq .Values.services.gateway.type "NodePort"}}
+    nodePort: {{ .Values.services.gateway.nodePort }}
+    {{ end }}
+  type: {{ .Values.services.gateway.type }} 
 ---
 kind: Service
 apiVersion: v1
