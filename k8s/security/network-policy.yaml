@@ -1,26 +1,3 @@
-apiVersion: v1
-kind: Pod
-metadata:
-  name: network-policy-secure-pod
-  labels:
-    app: secure-app
-spec:
-  containers:
-  - name: nginx
-    image: nginx
-    ports:
-    - containerPort: 80
----
-apiVersion: v1
-kind: Pod
-metadata:
-  name: network-policy-client-pod
-spec:
-  containers:
-  - name: busybox
-    image: radial/busyboxplus:curl
-    command: ["/bin/sh", "-c", "while true; do sleep 3600; done"]
----
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -48,3 +25,30 @@ spec:
     ports:
     - protocol: TCP
       port: 80
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: network-policy-secure-pod
+  labels:
+    app: secure-app
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+    ports:
+    - containerPort: 80
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: network-policy-client-pod
+  labels:
+    app: secure-client
+    allow-access: "true"  
+spec:
+  containers:
+  - name: busybox
+    image: radial/busyboxplus:curl
+    command: ["/bin/sh", "-c", "while true; do sleep 3600; done"]
+

@@ -47,6 +47,25 @@ kubectl rollout status deployment nginx-deployment # display rollout status of d
 kubectl rollout history deployment nginx-deployment # display rollout history 
 kubectl rollout undo deployment nginx-deployment # execute a rollback on deployment
 
+### RBAC
+### ------------
+kubectl get roles
+kubectl get rolebindings
+kubectl get clusterroles
+kubectl get clusterrolebindings
+kubectl get serviceaccount default -o yaml # get details of default service account
+kubectl get serviceaccount <name> -o yaml # get details of service account  
+kubectl get pod <podname> -o yaml # get details of service account associated with the pod
+
+### Scheduling
+### ------------
+kubectl get nodes --show-labels # get list of nodes along with labels
+kubectl label nodes <node-name> <label-key>=<label-value> # create a custom label on a node
+kubectl label node docker-desktop virtualcpus- # remove a node label virtualcpus
+kubectl taint nodes node1 key1=value1:NoSchedule # taint node node1 with key1 with value1
+kubectl taint nodes node1 key1=value1:NoSchedule- # remove a taint from the node node1
+kubectl describe node docker-desktop # look out for taint key
+
 ### observing
 ### ------------
 kubectl get pods -o wide # get pod information in wide format

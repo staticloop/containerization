@@ -7,9 +7,12 @@ spec:
     podAffinity:
       requiredDuringSchedulingIgnoredDuringExecution:
       - labelSelector:
+      # pod can schedule onto a node only if that node 
+      # has at least one already-running pod with a label 
+      # that has the key security and value S1
           matchExpressions:
           - key: security
-            operator: In
+            operator: In # matchExpression can be In, NotIn, Exists, or DoesNotExist
             values:
             - S1
         topologyKey: failure-domain.beta.kubernetes.io/zone
@@ -18,6 +21,9 @@ spec:
       - weight: 100
         podAffinityTerm:
           labelSelector:
+            # pod prefers to not schedule onto a node if that node 
+            # is already running a pod with label having key security 
+            # and value S2
             matchExpressions:
             - key: security
               operator: In

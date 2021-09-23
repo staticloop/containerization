@@ -4,7 +4,12 @@ metadata:
   name: example
 spec:
   privileged: false  # Don't allow privileged pods!
-  # The rest fills in some required fields.
+  hostNetwork: true
+  hostPorts:
+  - min: 0
+    max: 65535
+  hostIPC: true
+  hostPID: true
   seLinux:
     rule: RunAsAny
   supplementalGroups:
