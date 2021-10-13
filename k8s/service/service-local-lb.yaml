@@ -1,0 +1,23 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: web-service-lb
+spec:
+  selector:
+    app: web-app-lb
+  ports:
+  - protocol: TCP
+    port: 8080 
+    targetPort: 80
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: httpd-pod-lb
+  labels:
+    app: web-app-lb
+spec:
+  containers:
+  - name: httpd-container
+    image: httpd:2.4.48
