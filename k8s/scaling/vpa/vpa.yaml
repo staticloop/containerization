@@ -8,7 +8,7 @@ spec:
     kind: Deployment # can be ReplicaSet, StatefulSet also
     name: nginx-deployment
   updatePolicy: 
-    updateMode:  Recreate
+    #updateMode:  Recreate
     containerPolicies:
       - containerName: '*'
         minAllowed:

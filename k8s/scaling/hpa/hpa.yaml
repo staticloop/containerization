@@ -9,4 +9,4 @@ spec:
     apiVersion: apps/v1
     kind: Deployment # can be ReplicaSet, StatefulSet also
     name: nginx-deployment
-  targetCPUUtilizationPercentage: 14
+  targetCPUUtilizationPercentage: 45

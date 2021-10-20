@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: web-app
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  serviceName: "nginx"
+  replicas: 3
+  updateStrategy:
+    type: OnDelete
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.20 # upgrade to 1.20
+        readinessProbe:
+          exec:
+            command:
+              - "sh"
+          initialDelaySeconds: 10
+        ports:
+        - containerPort: 80
+          name: web
+        volumeMounts:
+        - name: persistent-store
+          mountPath: /usr/share/nginx/html
+  volumeClaimTemplates: # replaces the volumes key
+    - metadata:
+        name: persistent-store
+      spec:
+        selector:
+          matchLabels:
+            app: my-app
+        storageClassName: local-storage
+        accessModes: [ ReadWriteOnce ]
+        resources:
+          requests:
+            storage: 100Mi    
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+  labels:
+    app: nginx
+spec:
+  ports:
+  - port: 80
+    name: web
+  clusterIP: None
+  selector:
+    app: nginx

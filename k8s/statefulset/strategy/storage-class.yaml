@@ -1,0 +1,10 @@
+# WaitForFirstConsumer - binding and provisioning of a PV until a Pod using the PVC is created
+# Immediate - binding and dynamic provisioning as PV is created
+
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: local-storage
+provisioner: kubernetes.io/no-provisioner
+volumeBindingMode: WaitForFirstConsumer
+
