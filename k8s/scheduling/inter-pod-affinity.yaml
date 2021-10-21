@@ -15,7 +15,7 @@ spec:
             operator: In # matchExpression can be In, NotIn, Exists, or DoesNotExist
             values:
             - S1
-        topologyKey: failure-domain.beta.kubernetes.io/zone
+        topologyKey: topology.kubernetes.io/zone
     podAntiAffinity:
       preferredDuringSchedulingIgnoredDuringExecution:
       - weight: 100
@@ -29,7 +29,7 @@ spec:
               operator: In
               values:
               - S2
-          topologyKey: failure-domain.beta.kubernetes.io/zone
+          topologyKey: topology.kubernetes.io/zone
   containers:
   - name: with-pod-affinity
     image: k8s.gcr.io/pause:2.0
