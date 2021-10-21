@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: nginx:1.20 # upgrade to 1.20
+        image: nginx:1.19 # upgrade to 1.20
         readinessProbe:
           exec:
             command:
